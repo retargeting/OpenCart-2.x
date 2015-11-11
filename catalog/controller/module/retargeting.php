@@ -448,8 +448,8 @@ class ControllerModuleRetargeting extends Controller {
                                     'name': '{$product_details['name']}',
                                     'url': '{$product_url}',
                                     'img': '{$data['shop_url']}image/{$product_details['image']}',
-                                    'price': {$product_details['price']},
-                                    'promo': ". (isset($product_details['special']) ? $product_details['special'] : 0) .",
+                                    'price': '".round($this->tax->calculate($product_details['price'], $product_details['tax_class_id'], $this->config->get('config_tax')),2)."',
+                                    'promo': '". (isset($product_details['special']) ? round($this->tax->calculate($product_details['special'],$product_details['tax_class_id'], $this->config->get('config_tax')),2) : 0) ."',
                                     'stock': ". (($product_details['quantity'] > 0) ? 1 : 0) .",
                                     ";
 
