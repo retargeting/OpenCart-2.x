@@ -5,6 +5,8 @@
  * catalog/controller/module/retargeting.php
  */
 
+include_once 'Retargeting_REST_API_Client.php';
+
 class ControllerModuleRetargeting extends Controller {
 
 	public function index() {
@@ -37,7 +39,7 @@ class ControllerModuleRetargeting extends Controller {
         $this->load->model('catalog/product');
         $this->load->model('catalog/information');
 //        $this->load->model('marketing/coupon'); /* Available only in the admin/ area */
-        $this->load->model('checkout/coupon');
+        // $this->load->model('checkout/coupon');
 
         /* ---------------------------------------------------------------------------------------------------------------------
          * Get the saved values from the admin area
@@ -801,6 +803,47 @@ class ControllerModuleRetargeting extends Controller {
                                             _ra.saveOrder(_ra.saveOrderInfo, _ra.saveOrderProducts);
                                         }";
             $data['js_output'] .= $data['saveOrder'];
+            
+            /*
+            * REST API Save Order
+            */
+
+            $apiKey = $this->config->get('retargeting_apikey');
+            $token = $this->config->get('retargeting_token');
+
+            if($apiKey && $token && $apiKey != '' && $token != ''){
+                $orderInfo = array(
+                    'order_no' => $order_no,
+                    'lastname' => $lastname,
+                    'firstname' => $firstname,
+                    'email' => $email,
+                    'phone' => $phone,
+                    'state' => $state,
+                    'city' => $city,
+                    'address' => $address,
+                    'discount_code' => $discount_code,
+                    'discount' => $total_discount_value,
+                    'shipping' => $shipping_value,
+                    'total' => $total_order_value
+                );
+
+                $orderProducts = array();
+
+                foreach($order_product_query->rows as $orderedProduct) {
+                    $orderProducts[] = array(
+                        'id' => $orderedProduct['product_id'],
+                        'quantity'=> $orderedProduct['quantity'],
+                        'price'=> $orderedProduct['price'],
+                        'variation_code'=> ''
+                    );
+                }
+
+                $orderClient = new Retargeting_REST_API_Client($apiKey, $token);
+                $orderClient->setResponseFormat("json");
+                $orderClient->setDecoding(false);
+                $response = $orderClient->order->save($orderInfo,$orderProducts);
+            }
+            
             unset($this->session->data['retargeting_pre_order_add']);
             unset($this->session->data['retargeting_post_order_add']);
         }
