@@ -83,16 +83,6 @@
                         </div>
                     </div>
 
-                    <!-- API URL -->
-                    <hr />
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="api_url">Your API URL:</label>
-                        <div class="col-sm-10">
-                            <h3><span class="label label-info" name="api_url"> <?php echo $shop_url; ?> </span></h3>
-                            <span class="small"> You need to register this link into your Retargeting account to automatically generate discount codes. </span>
-                        </div>
-                    </div>
-
                     <hr />
                     <div class="col-sm-2">
                         <h3>Fine tuning</h3>
