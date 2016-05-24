@@ -9,7 +9,7 @@ include_once 'Retargeting_REST_API_Client.php';
 
 class ControllerModuleRetargeting extends Controller {
 
-	public function index() {
+    public function index() {
 
         /* ---------------------------------------------------------------------------------------------------------------------
          * Setup the protocol
@@ -25,7 +25,7 @@ class ControllerModuleRetargeting extends Controller {
          * Load the module's language file
          * ---------------------------------------------------------------------------------------------------------------------
          */
-		$this->language->load('module/retargeting');
+        $this->language->load('module/retargeting');
 
         /* ---------------------------------------------------------------------------------------------------------------------
          * Load models that we might need access to
@@ -45,14 +45,14 @@ class ControllerModuleRetargeting extends Controller {
          * Get the saved values from the admin area
          * ---------------------------------------------------------------------------------------------------------------------
          */
-		$data['api_key_field'] = $this->config->get('retargeting_apikey');
-		$data['api_secret_field'] = $this->config->get('retargeting_token');
+        $data['api_key_field'] = $this->config->get('retargeting_apikey');
+        $data['api_secret_field'] = $this->config->get('retargeting_token');
 
         $data['retargeting_setEmail'] = htmlspecialchars_decode($this->config->get('retargeting_setEmail'));
-		$data['retargeting_addToCart'] = htmlspecialchars_decode($this->config->get('retargeting_addToCart'));
-		$data['retargeting_clickImage'] = htmlspecialchars_decode($this->config->get('retargeting_clickImage'));
-		$data['retargeting_commentOnProduct'] = htmlspecialchars_decode($this->config->get('retargeting_commentOnProduct'));
-		$data['retargeting_setVariation'] = htmlspecialchars_decode($this->config->get('retargeting_setVariation'));
+        $data['retargeting_addToCart'] = htmlspecialchars_decode($this->config->get('retargeting_addToCart'));
+        $data['retargeting_clickImage'] = htmlspecialchars_decode($this->config->get('retargeting_clickImage'));
+        $data['retargeting_commentOnProduct'] = htmlspecialchars_decode($this->config->get('retargeting_commentOnProduct'));
+        $data['retargeting_setVariation'] = htmlspecialchars_decode($this->config->get('retargeting_setVariation'));
 
         /**
          * --------------------------------------
@@ -124,7 +124,7 @@ class ControllerModuleRetargeting extends Controller {
          * STEP 3: expose the codes to Retargeting
          * STEP 4: kill the script
          */
-        if (isset($_POST) && isset($_POST['key']) && ($_POST['key'] === $data['api_key_field'])) {
+        if (isset($_GET) && isset($_GET['key']) && ($_GET['key'] === $data['api_key_field'])) {
 
             /* -------------------------------------------------------------
              * STEP 1: check $_POST and validate the API Key
@@ -811,7 +811,7 @@ class ControllerModuleRetargeting extends Controller {
         } else {
             return $this->load->view('/module/retargeting.tpl', $data);
         }
-	}
+    }
 
 
     
