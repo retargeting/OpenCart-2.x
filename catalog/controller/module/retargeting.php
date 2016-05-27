@@ -723,6 +723,8 @@ class ControllerModuleRetargeting extends Controller {
                                             'discount_code': '{$discount_code}',
                                             'discount': {$total_discount_value},
                                             'shipping': {$shipping_value},
+                                            'rebates': 0,
+                                            'fees': 0,
                                             'total': {$total_order_value}
                                         };
                                         ";
