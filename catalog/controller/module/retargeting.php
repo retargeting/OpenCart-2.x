@@ -498,14 +498,13 @@ class ControllerModuleRetargeting extends Controller {
                                             'category': [{
                                                 'id': {$product_cat_details['category_id']},
                                                 'name': '{$product_cat_details['name']}',
-                                                'parent': {$product_cat_details['parent_id']}}],
-                                                'breadcrumb': [
-                                                    {
+                                                'parent': {$product_cat_details['parent_id']},
+                                                'breadcrumb': [{
                                                         'id': {$product_cat_details_parent['category_id']},
                                                         'name': '{$product_cat_details_parent['name']}',
                                                         'parent': false
-                                                    }
-                                                ]";
+                                                    }]
+                                            }]";
 
                 } // Close elseif
 
