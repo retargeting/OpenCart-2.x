@@ -9,7 +9,7 @@ include_once 'Retargeting_REST_API_Client.php';
 
 class ControllerModuleRetargeting extends Controller {
 
-	public function index() {
+    public function index() {
 
         /* ---------------------------------------------------------------------------------------------------------------------
          * Setup the protocol
@@ -25,7 +25,7 @@ class ControllerModuleRetargeting extends Controller {
          * Load the module's language file
          * ---------------------------------------------------------------------------------------------------------------------
          */
-		$this->language->load('module/retargeting');
+        $this->language->load('module/retargeting');
 
         /* ---------------------------------------------------------------------------------------------------------------------
          * Load models that we might need access to
@@ -38,22 +38,21 @@ class ControllerModuleRetargeting extends Controller {
         $this->load->model('catalog/manufacturer');
         $this->load->model('catalog/product');
         $this->load->model('catalog/information');
-//        $this->load->model('marketing/coupon'); /* Available only in the admin/ area */
-        // $this->load->model('checkout/coupon');
+       // $this->load->model('marketing/coupon'); /* Available only in the admin/ area */
+        // $this->load->model('total/coupon');
 
         /* ---------------------------------------------------------------------------------------------------------------------
          * Get the saved values from the admin area
          * ---------------------------------------------------------------------------------------------------------------------
          */
-		$data['api_key_field'] = $this->config->get('retargeting_apikey');
-		$data['api_secret_field'] = $this->config->get('retargeting_token');
+        $data['api_key_field'] = $this->config->get('retargeting_apikey');
+        $data['api_secret_field'] = $this->config->get('retargeting_token');
 
         $data['retargeting_setEmail'] = htmlspecialchars_decode($this->config->get('retargeting_setEmail'));
-		$data['retargeting_addToCart'] = htmlspecialchars_decode($this->config->get('retargeting_addToCart'));
-		$data['retargeting_clickImage'] = htmlspecialchars_decode($this->config->get('retargeting_clickImage'));
-		$data['retargeting_commentOnProduct'] = htmlspecialchars_decode($this->config->get('retargeting_commentOnProduct'));
-		// $data['retargeting_mouseOverPrice'] = htmlspecialchars_decode($this->config->get('retargeting_mouseOverPrice'));
-		$data['retargeting_setVariation'] = htmlspecialchars_decode($this->config->get('retargeting_setVariation'));
+        $data['retargeting_addToCart'] = htmlspecialchars_decode($this->config->get('retargeting_addToCart'));
+        $data['retargeting_clickImage'] = htmlspecialchars_decode($this->config->get('retargeting_clickImage'));
+        $data['retargeting_commentOnProduct'] = htmlspecialchars_decode($this->config->get('retargeting_commentOnProduct'));
+        $data['retargeting_setVariation'] = htmlspecialchars_decode($this->config->get('retargeting_setVariation'));
 
         /**
          * --------------------------------------
@@ -125,7 +124,7 @@ class ControllerModuleRetargeting extends Controller {
          * STEP 3: expose the codes to Retargeting
          * STEP 4: kill the script
          */
-        if (isset($_POST) && isset($_POST['key']) && ($_POST['key'] === $data['api_key_field'])) {
+        if (isset($_GET) && isset($_GET['key']) && ($_GET['key'] === $data['api_key_field'])) {
 
             /* -------------------------------------------------------------
              * STEP 1: check $_POST and validate the API Key
@@ -177,7 +176,7 @@ class ControllerModuleRetargeting extends Controller {
                                     logged = '0',
                                     shipping = '0',
                                     date_start = '{$start_date}',
-                                    date_end = '{$expiration_date}',
+                                    date_end = '',
                                     uses_total = '1',
                                     uses_customer = '1',
                                     status = '1',
@@ -197,7 +196,7 @@ class ControllerModuleRetargeting extends Controller {
                                     logged = '0',
                                     shipping = '0',
                                     date_start = '{$start_date}',
-                                    date_end = '{$expiration_date}',
+                                    date_end = '',
                                     uses_total = '1',
                                     uses_customer = '1',
                                     status = '1',
@@ -217,7 +216,7 @@ class ControllerModuleRetargeting extends Controller {
                                     logged = '0',
                                     shipping = '1',
                                     date_start = '{$start_date}',
-                                    date_end = '{$expiration_date}',
+                                    date_end = '',
                                     uses_total = '1',
                                     uses_customer = '1',
                                     status = '1',
@@ -326,7 +325,7 @@ class ControllerModuleRetargeting extends Controller {
             $category_info_parent = $this->model_catalog_category->getCategory($category_id_parent);
 
             $data['sendCategory'] = '
-                                            /* -- sendCategory -- */
+                        /* -- sendCategory -- */
                                             ';
             $data['sendCategory'] = 'var _ra = _ra || {}; ';
             $data['sendCategory'] .= '_ra.sendCategoryInfo = {';
@@ -338,11 +337,11 @@ class ControllerModuleRetargeting extends Controller {
                     $category_id = $data['current_category'][$i];
                     $category_info = $this->model_catalog_category->getCategory($category_id);
                     $data['sendCategory'] .= "
-                                                    'id': {$category_id},
-                                                    'name': '{$category_info['name']}',
-                                                    'parent': {$category_id_parent},
-                                                    'category_breadcrumb': [
-                                                    ";
+                            'id': {$category_id},
+                            'name': '{$category_info['name']}',
+                            'parent': {$category_id_parent},
+                            'breadcrumb': [
+                            ";
                     break;
                 }
 
@@ -381,7 +380,7 @@ class ControllerModuleRetargeting extends Controller {
                                                 'id': {$data['category_id']},
                                                 'name': '{$data['category_info']['name']}',
                                                 'parent': false,
-                                                'category_breadcrumb': []
+                                                'breadcrumb': []
                                                 ";
             }
 
@@ -443,7 +442,8 @@ class ControllerModuleRetargeting extends Controller {
 
             /* Send the base info */
             $data['sendProduct'] = "
-                                    var _ra = _ra || {}; _ra.sendProductInfo = {
+                                    var _ra = _ra || {};
+                                    _ra.sendProductInfo = {
                                     ";
             $data['sendProduct'] .= "
                                     'id': $product_id,
@@ -452,7 +452,10 @@ class ControllerModuleRetargeting extends Controller {
                                     'img': '{$data['shop_url']}image/{$product_details['image']}',
                                     'price': '".round($this->tax->calculate($product_details['price'], $product_details['tax_class_id'], $this->config->get('config_tax')),2)."',
                                     'promo': '". (isset($product_details['special']) ? round($this->tax->calculate($product_details['special'],$product_details['tax_class_id'], $this->config->get('config_tax')),2) : 0) ."',
-                                    'stock': ". (($product_details['quantity'] > 0) ? 1 : 0) .",
+                                    'inventory': {
+                                        'variations': false,
+                                        'stock' : ".(($product_details['quantity'] > 0) ? 1 : 0)."
+                                    },
                                     ";
 
             /* Check if the product has a brand assigned */
@@ -476,8 +479,13 @@ class ControllerModuleRetargeting extends Controller {
                 if (isset($product_cat_details['parent_id']) && ($product_cat_details['parent_id'] == 0)) {
 
                     $data['sendProduct'] .= "
-                                            'category': {'id': {$product_cat_details['category_id']}, 'name': '{$product_cat_details['name']}', 'parent': false},
-                                            'category_breadcrumb': []
+                                            'category': 
+                                                [{
+                                                    'id': {$product_cat_details['category_id']},
+                                                    'name': '{$product_cat_details['name']}',
+                                                    'parent': false,
+                                                    'breadcrumb': []
+                                                }],
                                             ";
 
                 // Resides in a nested category (child -> go up until parent)
@@ -487,13 +495,33 @@ class ControllerModuleRetargeting extends Controller {
 
                     // Get the top level category
                     $data['sendProduct'] .= "
-                                            'category': {'id': {$product_cat_details['category_id']}, 'name': '{$product_cat_details['name']}', 'parent': {$product_cat_details['parent_id']}},
-                                            'category_breadcrumb': [{'id': {$product_cat_details_parent['category_id']}, 'name': '{$product_cat_details_parent['name']}', 'parent': false}]
-                                            ";
+                                            'category': [{
+                                                'id': {$product_cat_details['category_id']},
+                                                'name': '{$product_cat_details['name']}',
+                                                'parent': {$product_cat_details['parent_id']},
+                                                'breadcrumb': [
+                                                    {
+                                                        'id': {$product_cat_details_parent['category_id']},
+                                                        'name': '{$product_cat_details_parent['name']}',
+                                                        'parent': false
+                                                    }
+                                                ]
+                                            }
+                                            ]";
 
                 } // Close elseif
 
-            } // Close check if product has categories assigned
+            } else {
+                $data['sendProduct'] .= "
+                    'category': 
+                        [{
+                            'id': 1,
+                            'name': 'Root',
+                            'parent': false,
+                            'breadcrumb': []
+                        }],
+                    ";
+            }// Close check if product has categories assigned
 
             $data['sendProduct'] .= "};"; // Close _ra.sendProductInfo
             $data['sendProduct'] .= "
@@ -577,81 +605,24 @@ class ControllerModuleRetargeting extends Controller {
         }
         /* --- END commentOnProduct  --- */
 
-
-
-        /*
-         * mouseOverPrice ✓
-         * clickImage ✓
-         * likeFacebook ✓
-         * setVariation ✓
-         */
-        if ($data['current_page'] === 'product/product') {
-            $mouseOverPrice_product_id = $this->request->get['product_id'];
-            $mouseOverPrice_product_info = $this->model_catalog_product->getProduct($mouseOverPrice_product_id);
-            $mouseOverPrice_product_promo = (isset($mouseOverPrice_product_info['special'])) ? $mouseOverPrice_product_info['special'] : '0';
-
-            $data['mouseOverPrice'] = "
-                                            /* -- clickImage -- */
-                                            jQuery(document).ready(function($) {
-                                                if ($(\"{$data['retargeting_clickImage']}\").length > 0) {
-                                                    $(\"{$data['retargeting_clickImage']}\").mouseover(function(){
-
-                                                        _ra.clickImage({$mouseOverPrice_product_id}, function() {console.log('clickImage FIRED')});
-                                                    });
-                                                }
-                                            });
-
-                                            /* -- likeFacebook -- */
-                                            jQuery(document).ready(function($) {
-                                                if (typeof FB != 'undefined') {
-                                                    FB.Event.subscribe('edge.create', function () {
-                                                        _ra.likeFacebook({$this->request->get['product_id']});
-                                                    });
-                                                }
-                                            });
-
-                                            /* -- setVariation -- */
-                                            jQuery(document).ready(function($){
-                                                $(\"{$this->data['retargeting_setVariation']}\").click(function(){
-                                                    if ( $(this).val() != undefined ) {
-                                                        _ra.setVariation({$this->request->get['product_id']}, {
-                                                            'code': '$(this).val()',
-                                                            'details': {}
-                                                        }, function() {
-                                                            console.log('setVariation fired.');
-                                                        });
-                                                    }
-                                                });
-                                            });
-                                            ";
-
-            $data['js_output'] .= $data['mouseOverPrice'];
-        }
-        /* --- END mouseOverPrice, clickImage, likeFacebook, setVariation  --- */
-
-
-
-        /*
-         * mouseOverAddToCart ✓
+/*
          * addToCart [v1 - class/id listener] ✓
          */
         if ($data['current_page'] === 'product/product') {
             $mouseOverAddToCart_product_id = $this->request->get['product_id'];
             $mouseOverAddToCart_product_info = $this->model_catalog_product->getProduct($mouseOverAddToCart_product_id);
             $mouseOverAddToCart_product_promo = isset($mouseOverAddToCart_product_info['promo']) ? : 0;
-
             $data['mouseOverAddToCart'] = "
-                                                /* -- mouseOverAddToCart & addToCart -- */
+                                                /* -- addToCart -- */
                                                 jQuery(document).ready(function($){
-                                                    if ($(\"{$data['retargeting_addToCart']}\").length > 0) {
+                                                    if ($(\"{$data['retargeting_addToCart']}\").length > 0) {  
                                                         /* -- addToCart -- */
                                                         $(\"{$data['retargeting_addToCart']}\").click(function(){
-                                                            _ra.addToCart({$mouseOverAddToCart_product_id}, false, function(){console.log('addToCart FIRED!')});
+                                                            _ra.addToCart({$mouseOverAddToCart_product_id}, ".(($product_details['quantity'] > 0) ? 1 : 0).", false, function(){console.log('addToCart FIRED!')});
                                                         });
                                                     }
                                                 });
                                                 ";
-
             $data['js_output'] .= $data['mouseOverAddToCart'];
         }
         /* --- END mouseOverAddToCart & addToCart[v1]  --- */
@@ -678,9 +649,9 @@ class ControllerModuleRetargeting extends Controller {
         /*
          * checkoutIds ✓
          */
-
+var_dump($this->cart->hasProducts());
         $checkout_modules = array('checkout/checkout', 'checkout/simplecheckout', 'checkout/ajaxquickcheckout', 'checkout/ajaxcheckout', 'checkout/quickcheckout', 'checkout/onepagecheckout', 'checkout/cart');
-        if(in_array($data['current_page'], $checkout_modules) && $this->cart->hasProducts() > 0 ) {
+        if(in_array($data['current_page'], $checkout_modules) && $this->cart->hasProducts() > 0) {
             $cart_products = $this->cart->getProducts(); // Use this instead of session
             $data['checkoutIds'] = "
                                         /* -- checkoutIds -- */
@@ -807,6 +778,8 @@ class ControllerModuleRetargeting extends Controller {
                     'discount_code' => $discount_code,
                     'discount' => $total_discount_value,
                     'shipping' => $shipping_value,
+                    'rebates'   =>  0,
+                    'fees'      =>  0,
                     'total' => $total_order_value
                 );
 
@@ -839,9 +812,9 @@ class ControllerModuleRetargeting extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/retargeting.tpl')) {
             return $this->load->view($this->config->get('config_template') . '/template/module/retargeting.tpl', $data);
         } else {
-            return $this->load->view('/module/retargeting.tpl', $data);
+            return $this->load->view('/default/template/module/retargeting.tpl', $data);
         }
-	}
+    }
 
 
     
