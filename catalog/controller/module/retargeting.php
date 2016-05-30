@@ -52,7 +52,7 @@ class ControllerModuleRetargeting extends Controller {
 		$data['retargeting_addToCart'] = htmlspecialchars_decode($this->config->get('retargeting_addToCart'));
 		$data['retargeting_clickImage'] = htmlspecialchars_decode($this->config->get('retargeting_clickImage'));
 		$data['retargeting_commentOnProduct'] = htmlspecialchars_decode($this->config->get('retargeting_commentOnProduct'));
-		$data['retargeting_mouseOverPrice'] = htmlspecialchars_decode($this->config->get('retargeting_mouseOverPrice'));
+		// $data['retargeting_mouseOverPrice'] = htmlspecialchars_decode($this->config->get('retargeting_mouseOverPrice'));
 		$data['retargeting_setVariation'] = htmlspecialchars_decode($this->config->get('retargeting_setVariation'));
 
         /**
@@ -591,19 +591,6 @@ class ControllerModuleRetargeting extends Controller {
             $mouseOverPrice_product_promo = (isset($mouseOverPrice_product_info['special'])) ? $mouseOverPrice_product_info['special'] : '0';
 
             $data['mouseOverPrice'] = "
-                                            /* -- mouseOverPrice -- */
-                                            jQuery(document).ready(function($) {
-                                                if ($(\"{$data['retargeting_mouseOverPrice']}\").length > 0) {
-                                                    $(\"{$data['retargeting_mouseOverPrice']}\").mouseover(function(){
-                                                        _ra.mouseOverPrice({$mouseOverPrice_product_id}, {
-                                                                                                        'price': {$mouseOverPrice_product_info['price']},
-                                                                                                        'promo': {$mouseOverPrice_product_promo}
-                                                                                                        }, function() {console.log('mouseOverPrice FIRED')}
-                                                        );
-                                                    });
-                                                }
-                                            });
-
                                             /* -- clickImage -- */
                                             jQuery(document).ready(function($) {
                                                 if ($(\"{$data['retargeting_clickImage']}\").length > 0) {
@@ -657,11 +644,6 @@ class ControllerModuleRetargeting extends Controller {
                                                 /* -- mouseOverAddToCart & addToCart -- */
                                                 jQuery(document).ready(function($){
                                                     if ($(\"{$data['retargeting_addToCart']}\").length > 0) {
-                                                        /* -- mouseOverAddToCart -- */
-                                                        $(\"{$data['retargeting_addToCart']}\").mouseover(function(){
-                                                             _ra.mouseOverAddToCart({$mouseOverAddToCart_product_id}, function(){console.log('mouseOverAddToCart FIRED')});
-                                                        });
-
                                                         /* -- addToCart -- */
                                                         $(\"{$data['retargeting_addToCart']}\").click(function(){
                                                             _ra.addToCart({$mouseOverAddToCart_product_id}, false, function(){console.log('addToCart FIRED!')});
