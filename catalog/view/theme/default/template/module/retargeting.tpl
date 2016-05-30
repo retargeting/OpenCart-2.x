@@ -8,7 +8,7 @@
 <!-- START RETARGETING MODULE -->
 <script>
     (function(){
-    var ra_key = "<?php echo $api_key_field; ?>";
+    ra_key = "<?php echo $api_key_field; ?>";
     ra_params = {
         add_to_cart_button_id: 'button-cart',
         price_label_id: 'price_label_id',
