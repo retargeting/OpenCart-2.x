@@ -678,7 +678,8 @@ class ControllerModuleRetargeting extends Controller {
         /*
          * checkoutIds ✓
          */
-        $checkout_modules = array('checkout/checkout', 'checkout/simplecheckout', 'checkout/ajaxquickcheckout', 'checkout/ajaxcheckout', 'checkout/quickcheckout', 'checkout/onepagecheckout');
+
+        $checkout_modules = array('checkout/checkout', 'checkout/simplecheckout', 'checkout/ajaxquickcheckout', 'checkout/ajaxcheckout', 'checkout/quickcheckout', 'checkout/onepagecheckout', 'checkout/cart');
         if(in_array($data['current_page'], $checkout_modules) && $this->cart->hasProducts() > 0 ) {
             $cart_products = $this->cart->getProducts(); // Use this instead of session
             $data['checkoutIds'] = "
