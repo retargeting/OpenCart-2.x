@@ -849,6 +849,4 @@ var_dump($this->cart->hasProducts());
     }
 
 
-
-
 }
