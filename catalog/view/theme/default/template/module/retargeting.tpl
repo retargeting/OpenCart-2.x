@@ -6,12 +6,13 @@
     MODULE: Retargeting
 -->
 <!-- START RETARGETING MODULE -->
-<script type="text/javascript">
-
-    /* -- For use with v3 only -- */
-    /*
+<script>
     (function(){
         var ra_key = "<?php echo $api_key_field; ?>";
+        ra_params = {
+            add_to_cart_button_id: 'button-cart',
+            price_label_id: 'price_label_id',
+        };
         var ra = document.createElement("script");
         ra.type ="text/javascript";
         ra.async = true;
@@ -20,20 +21,6 @@
         s.parentNode.insertBefore(ra,s);
     })
     ();
-    */
-
-    /* -- For use with v2 -- */
-    (function(){
-        var ra = document.createElement("script");
-        ra.type ="text/javascript";
-        ra.async = true;
-        ra.src = ("https:" == document.location.protocol ? "https://" : "http://") + "retargeting-data.eu/" + document.location.hostname.replace("www.","") + "/ra.js";
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(ra,s);
-    })
-    ();
-
     <?php echo $js_output; ?>
-
 </script>
 <!-- END RETARGETING MODULE -->
