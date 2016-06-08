@@ -31,7 +31,7 @@ class ControllerModuleRetargeting extends Controller {
         $this->load->model('extension/event');
         $this->load->model('localisation/language');
         $this->load->model('design/layout');
-        //$this->load->model('marketing/coupon');
+
         $this->document->setTitle($this->language->get('heading_title'));
         $data['languages'] = $this->model_localisation_language->getLanguages();
 
@@ -180,7 +180,6 @@ class ControllerModuleRetargeting extends Controller {
     public function install() {
 
         $this->load->model('extension/event'); // OpenCart 2.0.1+
-        //$this->load->model('tool/event'); // OpenCart 2.0.0
         $this->load->model('design/layout');
         $this->load->model('setting/setting');
 
@@ -195,8 +194,8 @@ class ControllerModuleRetargeting extends Controller {
                             ");
         }
 
-        $this->model_extension_event->addEvent('retargeting', 'pre.order.add', 'module/retargeting/pre_order_add');
-        $this->model_extension_event->addEvent('retargeting', 'post.order.add', 'module/retargeting/post_order_add');
+        $this->model_extension_event->addEvent('retargeting', 'catalog/model/checkout/order/addOrderHistory/before', 'module/retargeting/pre_order_add');
+        $this->model_extension_event->addEvent('retargeting', 'catalog/model/checkout/order/addOrderHistory/after', 'module/retargeting/post_order_add');
 
     }
 

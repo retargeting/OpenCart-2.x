@@ -9,8 +9,8 @@
  */
 
 // Heading
-$_['heading_title']     = 'Retargeting Module for OpenCart 2.0.1+';
-$_['text_edit'] = 'Retargeting Module for OpenCart 2.0.1+';
+$_['heading_title']     = 'Retargeting Module for OpenCart 2.2.0';
+$_['text_edit'] = 'Retargeting Module for OpenCart 2.2.0';
 
 // Text
 $_['text_module']        = 'Modules';
@@ -42,7 +42,7 @@ $_['error_code']        = 'API Key required for the module to work!';
 
 
 // ONLY FOR OPENCART 2.x
-$_['text_edit'] = 'Retargeting Module for OpenCart 2.0.1+';
+$_['text_edit'] = 'Retargeting Module for OpenCart 2.2.0';
 $_['entry_apikey'] = 'API Key: ';
 $_['entry_token'] = 'Token: ';
 $_['error_token_required'] = '<strong>You MUST enter the TOKEN for a fully functional module.</strong>';

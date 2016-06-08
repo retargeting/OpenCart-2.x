@@ -39,7 +39,7 @@ class ControllerModuleRetargeting extends Controller {
         $this->load->model('catalog/product');
         $this->load->model('catalog/information');
        // $this->load->model('marketing/coupon'); /* Available only in the admin/ area */
-        // $this->load->model('total/coupon');
+//         $this->load->model('total/coupon');
 
         /* ---------------------------------------------------------------------------------------------------------------------
          * Get the saved values from the admin area
@@ -685,12 +685,12 @@ class ControllerModuleRetargeting extends Controller {
          * 
          * via pre.order.add event
          */
+
         if (
             (isset($this->session->data['retargeting_pre_order_add']) && !empty($this->session->data['retargeting_pre_order_add']))
             ||
             (isset($this->session->data['retargeting_post_order_add']) && !empty($this->session->data['retargeting_post_order_add']))
-                                                                                                                                    ) {
-            
+                                                                                                                          ) {
             $data['order_id'] = $this->session->data['retargeting_post_order_add'];
             $data['order_data'] = $this->model_checkout_order->getOrder($data['order_id']);
 
@@ -726,6 +726,8 @@ class ControllerModuleRetargeting extends Controller {
                                             'discount_code': '{$discount_code}',
                                             'discount': {$total_discount_value},
                                             'shipping': {$shipping_value},
+                                            'rebates': 0,
+                                            'fees': 0,
                                             'total': {$total_order_value}
                                         };
                                         ";
@@ -809,10 +811,10 @@ class ControllerModuleRetargeting extends Controller {
          * Set the template path for our module & load the View
          * ---------------------------------------------------------------------------------------------------------------------
          */
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/retargeting.tpl')) {
-            return $this->load->view($this->config->get('config_template') . '/template/module/retargeting.tpl', $data);
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/module/retargeting.tpl')) {
+            return $this->load->view($this->config->get('config_template') . '/module/retargeting.tpl', $data);
         } else {
-            return $this->load->view('/default/template/module/retargeting.tpl', $data);
+            return $this->load->view('/module/retargeting.tpl', $data);
         }
     }
 
@@ -826,10 +828,9 @@ class ControllerModuleRetargeting extends Controller {
      * Returns: (array)$data
      * ---------------------------------------------------------------------------------------------------------------------
      */
+    
     public function pre_order_add($data) {
-
         $this->session->data['retargeting_pre_order_add'] = $data;
-
     }
 
 
@@ -842,10 +843,9 @@ class ControllerModuleRetargeting extends Controller {
      * Used for: saveOrder js
      * ---------------------------------------------------------------------------------------------------------------------
      */
-    public function post_order_add($order_id) {
 
+    public function post_order_add($route, $output, $order_id, $order_status_id) {
         $this->session->data['retargeting_post_order_add'] = $order_id;
-
     }
 
 
