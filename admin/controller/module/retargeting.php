@@ -195,8 +195,8 @@ class ControllerModuleRetargeting extends Controller {
                             ");
         }
 
-        $this->model_extension_event->addEvent('retargeting', 'pre.order.add', 'module/retargeting/pre_order_add');
-        $this->model_extension_event->addEvent('retargeting', 'post.order.add', 'module/retargeting/post_order_add');
+        $this->model_extension_event->addEvent('retargeting', 'post.order.history.add', 'module/retargeting/post_order_add');
+
 
     }
 
