@@ -682,8 +682,6 @@ class ControllerModuleRetargeting extends Controller {
          * via pre.order.add event
          */
         if (
-            (isset($this->session->data['retargeting_pre_order_add']) && !empty($this->session->data['retargeting_pre_order_add']))
-            ||
             (isset($this->session->data['retargeting_post_order_add']) && !empty($this->session->data['retargeting_post_order_add']))
                                                                                                                                     ) {
             
@@ -798,7 +796,6 @@ class ControllerModuleRetargeting extends Controller {
                 $response = $orderClient->order->save($orderInfo,$orderProducts);
             }
             
-            unset($this->session->data['retargeting_pre_order_add']);
             unset($this->session->data['retargeting_post_order_add']);
         }
 
@@ -813,23 +810,6 @@ class ControllerModuleRetargeting extends Controller {
             return $this->load->view('/default/template/module/retargeting.tpl', $data);
         }
     }
-
-
-    
-    /* ---------------------------------------------------------------------------------------------------------------------
-     * Event: pre.order.add
-     * 
-     * Called: After the order has been launched && before unset($data)
-     * Used for: saveOrder js
-     * Returns: (array)$data
-     * ---------------------------------------------------------------------------------------------------------------------
-     */
-    public function pre_order_add($data) {
-
-        $this->session->data['retargeting_pre_order_add'] = $data;
-
-    }
-
 
 
     /* ---------------------------------------------------------------------------------------------------------------------
