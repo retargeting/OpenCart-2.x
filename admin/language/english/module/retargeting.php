@@ -43,9 +43,9 @@ $_['error_code']        = 'API Key required for the module to work!';
 
 // ONLY FOR OPENCART 2.x
 $_['text_edit'] = 'Retargeting Module for OpenCart 2.0.1+';
-$_['entry_apikey'] = 'API Key: ';
-$_['entry_token'] = 'Token: ';
-$_['error_token_required'] = '<strong>You MUST enter the TOKEN for a fully functional module.</strong>';
-$_['error_apikey_required'] = '<strong>You MUST enter the API KEY for a fully functional module.</strong>';
+$_['entry_apikey'] = 'Tracking API Key: ';
+$_['entry_token'] = 'REST API Key: ';
+$_['error_token_required'] = '<strong>You MUST enter the REST API Key for a fully functional module.</strong>';
+$_['error_apikey_required'] = '<strong>You MUST enter the Tracking Key for a fully functional module.</strong>';
 
 ?>
