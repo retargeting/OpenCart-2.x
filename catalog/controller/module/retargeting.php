@@ -439,6 +439,8 @@ class ControllerModuleRetargeting extends Controller {
             $product_details = $this->model_catalog_product->getProduct($product_id);
             $product_categories = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" . (int)$product_id . "'");
             $product_categories = $product_categories->rows; // Get all the subcategories for this product. Reorder its numerical indexes to ease the breadcrumb logic
+            $product_current_currency_price = $this->currency->format($this->tax->calculate($product_details['price'], $product_details['tax_class_id'], $this->config->get('config_tax')), '', '', false);
+            $product_current_currency_special = (isset($product_details['special']) ? $this->currency->format($this->tax->calculate($product_details['special'], $product_details['tax_class_id'], $this->config->get('config_tax')), '', '', false) : 0);
 
             /* Send the base info */
             $data['sendProduct'] = "
@@ -450,8 +452,8 @@ class ControllerModuleRetargeting extends Controller {
                                     'name': '{$product_details['name']}',
                                     'url': '{$product_url}',
                                     'img': '{$data['shop_url']}image/{$product_details['image']}',
-                                    'price': '".round($this->tax->calculate($product_details['price'], $product_details['tax_class_id'], $this->config->get('config_tax')),2)."',
-                                    'promo': '". (isset($product_details['special']) ? round($this->tax->calculate($product_details['special'],$product_details['tax_class_id'], $this->config->get('config_tax')),2) : 0) ."',
+                                    'price': '".round($product_current_currency_price,2)."',
+                                    'promo': '". $product_current_currency_special ."',
                                     'inventory': {
                                         'variations': false,
                                         'stock' : ".(($product_details['quantity'] > 0) ? 1 : 0)."
@@ -700,7 +702,13 @@ class ControllerModuleRetargeting extends Controller {
             $discount_code = isset($this->session->data['retargeting_discount_code']) ? $this->session->data['retargeting_discount_code'] : 0;
             $total_discount_value = 0;
             $shipping_value = 0;
-            $total_order_value = $data['order_data']['total'];;
+            $total_order_value = $this->currency->format(
+                $data['order_data']['total'],
+                $data['order_data']['currency_code'],
+                $data['order_data']['currency_value'],
+                false
+            );
+//            $total_order_value = $data['order_data']['total'];;
 
             // Based on order id, grab the ordered products
             $order_product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$data['order_id'] . "'");
@@ -729,11 +737,17 @@ class ControllerModuleRetargeting extends Controller {
             /* -------------------------------------- */
             $data['saveOrder'] .= "_ra.saveOrderProducts = [";
             for ($i = count($order_product_query->rows) - 1; $i >= 0; $i--) {
+                $product_price = $this->currency->format(
+                    $order_product_query->rows[$i]['price'],
+                    $data['order_data']['currency_code'],
+                    $data['order_data']['currency_value'],
+                    false
+                );
                 if ($i == 0) {
                     $data['saveOrder'] .= "{
                                                 'id': {$order_product_query->rows[$i]['product_id']},
                                                 'quantity': {$order_product_query->rows[$i]['quantity']},
-                                                'price': {$order_product_query->rows[$i]['price']},
+                                                'price': {$product_price},
                                                 'variation_code': ''
                                                 }";
                     break;
@@ -741,7 +755,7 @@ class ControllerModuleRetargeting extends Controller {
                 $data['saveOrder'] .= "{
                                             'id': {$order_product_query->rows[$i]['product_id']},
                                             'quantity': {$order_product_query->rows[$i]['quantity']},
-                                            'price': {$order_product_query->rows[$i]['price']},
+                                            'price': {$product_price},
                                             'variation_code': ''
                                             },";
             }
